@@ -1,0 +1,10 @@
+services:
+  app:
+    build: API
+    ports:
+      - "8000:8000"
+
+  website:
+    build: website
+    ports:
+      - "80:80"

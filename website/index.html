@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload and Text Extraction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #drop-zone {
+            width: 300px;
+            height: 200px;
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            cursor: pointer;
+        }
+        #drop-zone.hover {
+            border-color: #0066cc;
+            background-color: #f0f8ff;
+        }
+        #image-preview {
+            margin: 20px auto;
+            max-width: 100%;
+            max-height: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: none;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Upload or Drag an Image</h1>
+
+<div id="drop-zone">Drag and drop an image here or click to upload</div>
+<input type="file" id="file-input" style="display: none;">
+
+<img id="image-preview" alt="Image Preview">
+<div id="result"></div>
+
+<script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const imagePreview = document.getElementById('image-preview');
+    const resultDiv = document.getElementById('result');
+
+    // Drag and drop events
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('hover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('hover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('hover');
+        const file = e.dataTransfer.files[0];
+        handleFile(file);
+    });
+
+    dropZone.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        handleFile(file);
+    });
+
+    function handleFile(file) {
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                imagePreview.src = reader.result;
+                imagePreview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+
+            uploadImage(file);
+        } else {
+            resultDiv.textContent = 'Please upload a valid image file.';
+        }
+    }
+
+    async function uploadImage(file) {
+        resultDiv.textContent = 'Processing...';
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+            const response = await fetch('/images', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) throw new Error('Error uploading image.');
+
+            const resultText = await response.text();
+            resultDiv.innerHTML = `<strong>Extracted Text:</strong> ${resultText}`;
+        } catch (error) {
+            resultDiv.textContent = `Error: ${error.message}`;
+        }
+    }
+</script>
+
+</body>
+</html>
