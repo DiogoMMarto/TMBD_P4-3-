@@ -2,7 +2,7 @@ from fastapi import FastAPI, File, UploadFile
 
 from lib import process_image
 
-app = FastAPI()
+app = FastAPI(prefix="/api")
 
 @app.get("/")
 async def root():
