@@ -51,6 +51,8 @@
 <div id="result"></div>
 
 <script>
+    const API_URL = "{{ api_url }}";
+
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
     const imagePreview = document.getElementById('image-preview');
@@ -104,7 +106,7 @@
         formData.append('image', file);
 
         try {
-            const response = await fetch('/images', {
+            const response = await fetch(API_URL + '/', {
                 method: 'POST',
                 body: formData
             });

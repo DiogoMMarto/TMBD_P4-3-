@@ -1,11 +1,14 @@
-# Use the official Nginx image from Docker Hub
-FROM nginx:alpine
+# Use the official Python image
+FROM python:3.10-slim
 
-# Copy static files to the Nginx web directory
-COPY index.html /usr/share/nginx/html/
+# Set the working directory in the container
+WORKDIR /app
 
-# Expose port 80
-EXPOSE 80
+# Copy the requirements file into the container
+COPY . .
 
-# Start Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Run the FastAPI app with Uvicorn
+CMD echo $WEB_PORT && uvicorn main:app --host 0.0.0.0 --port $WEB_PORT
