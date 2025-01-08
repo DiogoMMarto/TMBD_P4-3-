@@ -21,7 +21,12 @@ jobs:
           echo "API PORT: ${{ secrets.API_PORT }}"
           echo "WEB PORT: ${{ secrets.WEB_PORT }}"
           echo "DOCKER USERNAME: ${{ secrets.DOCKER_USERNAME }}"
+          echo "Length: ${#API_URL}"
+          echo "Length: ${#API_PORT}"
+          echo "Length: ${#WEB_PORT}"
+          echo "Length: ${#DOCKER_USERNAME}"
           echo "Length: ${#DOCKER_PASSWORD}"
+          
 
       # Log in to Docker Hub
       - name: Log in to Docker Hub
