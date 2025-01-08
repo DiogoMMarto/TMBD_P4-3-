@@ -15,16 +15,15 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Echo 
+      - name: Check Docker credentials
         run: |
-          echo "API URL: ${{ secrets.API_URL }}"
-          echo "API PORT: ${{ secrets.API_PORT }}"
-          echo "WEB PORT: ${{ secrets.WEB_PORT }}"
-          echo "DOCKER USERNAME: ${{ secrets.DOCKER_USERNAME }}"
-          echo "Length of API URL: ${#{ secrets.API_URL }}"
-          echo "Length of API PORT: ${#{ secrets.API_PORT }}"
-          echo "Length of WEB PORT: ${#{ secrets.WEB_PORT }}"
-          echo "Length of DOCKER USERNAME: ${#{ secrets.DOCKER_USERNAME }}"
+          echo "DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}"
+          if [ -z "${{ secrets.DOCKER_PASSWORD }}" ]; then
+            echo "DOCKER_PASSWORD is empty!"
+            exit 1
+          else
+            echo "DOCKER_PASSWORD is set."
+          fi
           
 
       # Log in to Docker Hub
