@@ -106,7 +106,8 @@
         formData.append('file', file);
 
         try {
-            const response = await fetch(API_URL + '/', {
+            console.log(API_URL);
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 body: formData
             });
