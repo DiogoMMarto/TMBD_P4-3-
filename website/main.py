@@ -5,7 +5,7 @@ import os
 app = FastAPI()
 
 # Load API URL from environment variable
-api_url = os.getenv("API_URL", "http://localhost:8000")
+api_url = os.getenv("API_URL", "http://0.0.0.0:8000/api")
 
 templates = Jinja2Templates(directory="templates")
 
