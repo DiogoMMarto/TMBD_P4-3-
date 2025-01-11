@@ -56,12 +56,13 @@ jobs:
       - name: Deploy to Remote Server
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.REMOTE_HOST }}
+          host: ${{ vars.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.REMOTE_SSH_KEY }}
           script: |
             cd ~/tmbd
-            sudo export API_URL=http://${{ secrets.REMOTE_HOST }}/api
+            echo http://${{ vars.REMOTE_HOST }}/api
+            sudo export API_URL=http://${{ vars.REMOTE_HOST }}/api
             sudo export API_PORT=${{ secrets.API_PORT }}
             sudo export WEB_PORT=${{ secrets.WEB_PORT }}
             sudo docker-compose pull
