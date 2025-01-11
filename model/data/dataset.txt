@@ -1,0 +1,3 @@
+Dataset URL: https://www.kaggle.com/datasets/meowmeowmeowmeowmeow/gtsrb-german-traffic-sign
+
+Extract the content to the model/data/ folder.
