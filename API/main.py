@@ -15,13 +15,11 @@ app.add_middleware(
 
 model = tf.keras.models.load_model("model.h5")
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
+app.mount("/api/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/api")
 async def root():
     return {"message": "Traffic Sign Classification API"}
-
 
 @app.post("/api")
 async def process(file: UploadFile):
