@@ -42,11 +42,12 @@ jobs:
       - name: Check if API has changes
         id: check_api_changes
         run: |
-          git diff --exit-code ./API || echo "API files changed"
-
-      # Build and push the API image if changes are detected
+          git diff --quiet HEAD~1..HEAD ./API
+        continue-on-error: true
+  
+        # Build and push the API image if changes are detected
       - name: Build and push API image
-        if: steps.check_api_changes.outcome == 'success'
+        if: steps.check_api_changes.outcome == 'failure'
         run: |
           docker build -t diogomarto/tmbdapi:latest ./API
           docker push diogomarto/tmbdapi:latest
