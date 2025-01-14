@@ -59,7 +59,7 @@ async def reroute_traffic(request: Request, call_next):
         target_server = servers[index]
         index = (index + 1) % len(servers)
         url_ = str(request.url).split("/api")
-        url = f"http://{target_server}/api{url_[1] if len(url_) > 1 else ""}"
+        url = f"http://{target_server}/api{url_[1] if len(url_) > 1 else ''}"
         print("[REDIRECTING]",url)
         try:
             req = await req_res(request,url)
