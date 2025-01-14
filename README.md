@@ -25,6 +25,6 @@ Run image:
 ```
 docker run -d -p 8001:8001 \
     -e WEB_PORT="8001" \
-    -e API_URL="http://0.0.0.0:8000/api" \
+    -e API_URL="http://localhost:8000/api" \
     traffic_sign_client
 ```
