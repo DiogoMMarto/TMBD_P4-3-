@@ -30,18 +30,8 @@ def open_env() -> list[str]:
 servers = open_env()
 index = 0
 print("[30]",servers)
-# reroute traffic from /api to a server in round robin mode
-@app.middleware("http")
-async def reroute_traffic(request: Request, call_next):
-    global index
-    global servers
-    if len(servers) == 0:
-        print("[ERROR] No serverrs")
-        return await call_next(request)
-    target_server = servers[index]
-    index = (index + 1) % len(servers)
-    url = str(request.url).replace(request.url.hostname + ":" + str(request.url.port) , target_server)
-    print("[REDIRECTING]",url)
+
+async def req_res(request: Request,url) -> Response:
     async with httpx.AsyncClient(follow_redirects=True) as client:
         response = await client.request(
             method=request.method,
@@ -55,6 +45,24 @@ async def reroute_traffic(request: Request, call_next):
             headers=dict(response.headers),
             media_type=response.headers.get("content-type")
         )
+        
+# reroute traffic from /api to a server in round robin mode
+@app.middleware("http")
+async def reroute_traffic(request: Request, call_next):
+    global index
+    global servers
+    if len(servers) == 0:
+        print("[ERROR] No servers")
+        return await call_next(request)
+    for _ in range(len(servers)):
+        target_server = servers[index]
+        index = (index + 1) % len(servers)
+        url = str(request.url).replace(request.url.hostname + ":" + str(request.url.port) , target_server)
+        print("[REDIRECTING]",url)
+        req = await req_res(request,url)
+        if req.status_code == 200:
+            return req
+    return Response(status_code=401)
 
 @app.get("/api")
 async def root():
