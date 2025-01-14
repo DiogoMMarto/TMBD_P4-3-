@@ -42,7 +42,7 @@ jobs:
       - name: Check if API has changes
         id: check_api_changes
         run: |
-          git diff --quiet HEAD~1..HEAD ./API
+          git diff --exit-code ./API || echo "API files changed"
         continue-on-error: true
   
         # Build and push the API image if changes are detected
