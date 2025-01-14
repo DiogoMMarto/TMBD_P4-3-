@@ -35,27 +35,26 @@ print("[30]",servers)
 async def reroute_traffic(request: Request, call_next):
     global index
     global servers
-    try:
-        target_server = servers[index]
-        index = (index + 1) % len(servers)
-        url = str(request.url).replace(request.url.hostname + ":" + str(request.url.port) , target_server)
-        print("[REDIRECTING]",url)
-        async with httpx.AsyncClient(follow_redirects=True) as client:
-            response = await client.request(
-                method=request.method,
-                url=url,
-                headers=request.headers,
-                data=await request.body()
-            )
+    if len(servers) == 0:
+        print("[ERROR] No serverrs")
+        return await call_next(request)
+    target_server = servers[index]
+    index = (index + 1) % len(servers)
+    url = str(request.url).replace(request.url.hostname + ":" + str(request.url.port) , target_server)
+    print("[REDIRECTING]",url)
+    async with httpx.AsyncClient(follow_redirects=True) as client:
+        response = await client.request(
+            method=request.method,
+            url=url,
+            headers=request.headers,
+            data=await request.body()
+        )
         return Response(
             content=response.content,
             status_code=response.status_code,
             headers=dict(response.headers),
             media_type=response.headers.get("content-type")
         )
-    except Exception as e:
-        print("[ERROR]",e)
-    return await call_next(request)
 
 @app.get("/api")
 async def root():
