@@ -45,6 +45,11 @@ jobs:
         run: |
           docker build -t diogomarto/tmbdapi:latest ./API
           docker push diogomarto/tmbdapi:latest
+      
+      - name: Build and push API image
+        run: |
+          docker build -t diogomarto/tmbdrouter:latest ./router
+          docker push diogomarto/tmbdrouter:latest
 
       # Build and push the website image
       - name: Build and push website image
@@ -61,9 +66,6 @@ jobs:
           key: ${{ secrets.REMOTE_SSH_KEY }}
           script: |
             cd ~/tmbd
-            echo http://${{ vars.REMOTE_HOST }}/api
-            sudo export API_URL=http://${{ vars.REMOTE_HOST }}/api
-            sudo export API_PORT=${{ secrets.API_PORT }}
-            sudo export WEB_PORT=${{ secrets.WEB_PORT }}
             sudo docker-compose pull
             sudo docker-compose up -d
+t
