@@ -68,4 +68,3 @@ jobs:
             cd ~/tmbd
             sudo docker-compose pull
             sudo docker-compose up -d
-t
