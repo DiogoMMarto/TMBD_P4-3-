@@ -40,7 +40,7 @@ async def reroute_traffic(request: Request, call_next):
         index = (index + 1) % len(servers)
         url = str(request.url).replace(request.url.hostname + ":" + str(request.url.port) , target_server)
         print("[REDIRECTING]",url)
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(follow_redirects=True, limits=httpx.Limits(max_redirects=5)) as client:
             response = await client.request(
                 method=request.method,
                 url=url,
