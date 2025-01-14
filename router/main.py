@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 import os
+from fastapi.responses import JSONResponse
 import httpx
 
 app = FastAPI()
@@ -32,7 +33,7 @@ index = 0
 print("[30]",servers)
 
 async def req_res(request: Request,url) -> Response:
-    async with httpx.AsyncClient(follow_redirects=True) as client:
+    async with httpx.AsyncClient(follow_redirects=True,timeout=20.0) as client:
         response = await client.request(
             method=request.method,
             url=url,
@@ -59,10 +60,14 @@ async def reroute_traffic(request: Request, call_next):
         index = (index + 1) % len(servers)
         url = str(request.url).replace(request.url.hostname + ":" + str(request.url.port) , target_server)
         print("[REDIRECTING]",url)
-        req = await req_res(request,url)
-        if req.status_code == 200:
-            return req
-    return Response(status_code=401)
+        try:
+            req = await req_res(request,url)
+            if req.status_code == 200:
+                return req
+        except httpx.ReadTimeout:
+            return JSONResponse({"error": "Request timed out, please try again later."}, status_code=408)
+        
+    return JSONResponse({"error": "No server could resolve request."}, status_code=409)
 
 @app.get("/api")
 async def root():
