@@ -58,7 +58,8 @@ async def reroute_traffic(request: Request, call_next):
     for _ in range(len(servers)):
         target_server = servers[index]
         index = (index + 1) % len(servers)
-        url = str(request.url).replace(request.url.hostname + ":" + str(request.url.port) , target_server)
+        url_ = str(request.url).split("/api")
+        url = f"http://{target_server}/api{url_[1] if len(url_) > 1 else ""}"
         print("[REDIRECTING]",url)
         try:
             req = await req_res(request,url)
