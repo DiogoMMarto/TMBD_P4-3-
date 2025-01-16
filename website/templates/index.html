@@ -42,7 +42,7 @@
 </head>
 <body>
 
-<h1>CHANGED TEXT</h1>
+<h1>Upload or Drag an Image</h1>
 
 <div id="drop-zone">Drag and drop an image here or click to upload</div>
 <input type="file" id="file-input" style="display: none;">
@@ -115,16 +115,7 @@
             if (!response.ok) throw new Error('Error uploading image.');
 
             const resultText = await response.text();
-            const result = JSON.parse(resultText);
-            console.log(resultText);
-            const classNumber = result.class;
-            const trafficSignPath = result.traffic_sign;
-
-            resultDiv.innerHTML = `
-                <strong>Class Number:</strong> ${classNumber} <br>
-                <img src="${trafficSignPath}" alt="Traffic Sign" style="max-width: 100%; height: auto;">
-            `;
-            // resultDiv.innerHTML = `<strong>Extracted Text:</strong> ${resultText}`;
+            resultDiv.innerHTML = `<strong>Extracted Text:</strong> ${resultText}`;
         } catch (error) {
             resultDiv.textContent = `Error: ${error.message}`;
         }
