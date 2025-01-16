@@ -115,7 +115,16 @@
             if (!response.ok) throw new Error('Error uploading image.');
 
             const resultText = await response.text();
-            resultDiv.innerHTML = `<strong>Extracted Text:</strong> ${resultText}`;
+            const result = JSON.parse(resultText);
+            console.log(resultText);
+            const classNumber = result.class;
+            const trafficSignPath = result.traffic_sign;
+
+            resultDiv.innerHTML = `
+                <strong>Class Number:</strong> ${classNumber} <br>
+                <img src="${trafficSignPath}" alt="Traffic Sign" style="max-width: 100%; height: auto;">
+            `;
+            // resultDiv.innerHTML = `<strong>Extracted Text:</strong> ${resultText}`;
         } catch (error) {
             resultDiv.textContent = `Error: ${error.message}`;
         }

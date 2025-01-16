@@ -7,7 +7,7 @@ HEIGHT = 30
 CHANNELS = 3
 
 def process_image(content, model):
-    image = Image.open(io.BytesIO(content))
+    image = Image.open(io.BytesIO(content)).convert("RGB")
     image = image.resize([WIDTH, HEIGHT])
     image = np.array(image) / 255
     
